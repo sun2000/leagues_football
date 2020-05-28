@@ -20,7 +20,7 @@ from sqlalchemy import create_engine
 
 
 # set params
-conn = create_engine(os.environ['DB_URI']) #'sqlite:///soccer-stats.db'
+conn = create_engine(os.environ['DB_URI']) #'sqlite:///data/soccer-stats.db'
 
 
 ###########################
