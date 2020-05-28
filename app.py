@@ -7,28 +7,20 @@ from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.figure_factory as ff
-# import dash_table
 import base64
 import glob
 import os
 
-
-#import plotly.graph_objs as go
-
-#import plotly.graph_objects as go
 import plotly.graph_objs as go
 
-# import plotly.express as px
 
 # pydata stack
 import pandas as pd
 from sqlalchemy import create_engine
 
 
-
 # set params
-conn = create_engine(os.environ['DB_URI'])
-#conn = create_engine('sqlite:///soccer-stats.db')
+conn = create_engine(os.environ['DB_URI']) #'sqlite:///soccer-stats.db'
 
 
 ###########################
@@ -105,24 +97,6 @@ def get_match_results(division, season, team):
     return match_results
 
 
-# def get_match_results(division, season):
-#     '''Returns match results for the selected prompts'''
-#     query = f'''
-#     SELECT division, season, team, sum(goals) as goals,
-#     SUM(CASE WHEN result = "W" THEN 1 Else 0 END) as win,
-#     SUM(CASE WHEN result = "L" THEN 1 Else 0 END) as lose,
-#     SUM(CASE WHEN result = "D" THEN 1 Else 0 END) as draw,
-#     sum(points) as points
-#     FROM results
-#     where division='{division}'
-#     and season='{season}'
-#     GROUP BY  division, season, team
-#     ORDER BY points DESC
-#
-#     '''
-#     match_results = fetch_data(query)
-#     return match_results
-
 
 def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
@@ -179,7 +153,7 @@ def draw_season_points_graph(results):
     return figure
 
 def draw_barchart_season_division_graph(results):
-    # sort Brand - ascending order
+    # sort Rank - descending order
     results.sort_values(by=['Rank'], inplace=True, ascending=False)
     teams = results['team']
     points = results['points']
@@ -216,20 +190,6 @@ def generate_table(dataframe, max_rows=10):
         ]) for i in range(min(len(dataframe), max_rows))]
     )
 
-
-
-# def generate_table(dataframe, page_size=10):
-#     '''Given dataframe, return template generated using Dash components
-#     '''
-#     return dash_table.DataTable(
-#         id='datatable-paging',
-#         columns=[{"name": i, "id": i} for i in dataframe.columns],
-#         data=dataframe.to_dict("rows"),
-#         pagination_settings={
-#             'current_page': 0,
-#             'page_size': page_size
-#         },
-#     )
 
 
 def onLoad_division_options():
@@ -270,6 +230,8 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 # style={'backgroundColor': colors['background']}, children=
 
+initial_division_value = get_divisions()[0]
+initial_season_value = get_seasons(initial_division_value)[0]
 
 app.layout = html.Div(
     [
@@ -280,6 +242,7 @@ app.layout = html.Div(
                     [
                         html.H1('Soccer Results Viewer', className="nine columns"),
                         html.Img(id="image",
+
                             # # src="/assets/bundesliga.png",
                             # src='data:image/png;base64,{}'.format(encoded_image.decode()),
                             # className='three columns',
@@ -305,7 +268,8 @@ app.layout = html.Div(
                         # Select Division Dropdown
                         dcc.Dropdown(
                             id='division-selector',
-                            options=onLoad_division_options()
+                            options=onLoad_division_options(),
+                            value=initial_division_value
                         )
                     ],
                     className='four columns',
@@ -318,7 +282,8 @@ app.layout = html.Div(
                         html.P('Select Season'),
                         html.Div(
                             dcc.Dropdown(
-                                id='season-selector'
+                                id='season-selector',
+                                value=initial_season_value
                             )
                         )
                     ],
@@ -328,7 +293,7 @@ app.layout = html.Div(
                 # Select Team Dropdown
                 html.Div(
                     [
-                        html.Div('Select Team'),
+                        html.Div('Select Team to view details'),
                         html.Div(
                             dcc.Dropdown(
                                 id='team-selector'
@@ -397,34 +362,10 @@ def update_image_src(division):
 
     # if image_name not in list_of_images:
     #     raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
-    image_filename = image_directory + division + ".png"
+    image_filename = image_directory + str(division) + ".png"
+    print("image_name: {}".format(image_name))
     encoded_image =  base64.b64encode(open(image_filename, 'rb').read())
     return('data:image/png;base64,{}'.format(encoded_image.decode()))
-
-# # Add a static image route that serves images from desktop
-# # Be *very* careful here - you don't want to serve arbitrary files
-# # from your computer or server
-# @app.server.route('{}<image_path>.png'.format(static_image_route))
-
-
-
-# def serve_image(division):
-#     image_name = '{}.png'.format(image_path)
-#     if image_name not in list_of_images:
-#         raise Exception('"{}" is excluded from the allowed static images'.format(image_path))
-#     image_filename = static_image_route + value + ".png"
-#     encoded_image =  base64.b64encode(open(image_filename, 'rb').read())
-#     return data:image/png;base64,{}'.format(encoded_image.decode())
-
-
-
-# image_filename = 'assets/bundesliga.png' # replace with your own image
-# encoded_image = base64.b64encode(open(image_filename, 'rb').read())
-#
-#
-# html.Img(id="image",
-# # src="/assets/bundesliga.png",
-# src='data:image/png;base64,{}'.format(encoded_image.decode()),
 
 
 
@@ -437,6 +378,7 @@ def update_image_src(division):
 )
 def populate_season_selector(division):
     seasons = get_seasons(division)
+    # print("seasons: {}".format(seasons))
     return [
         {'label': season, 'value': season}
         for season in seasons
