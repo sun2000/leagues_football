@@ -219,6 +219,9 @@ app.css.append_css({
 #     # "external_url": "/static/Bootstrap.css"
 # })
 
+#fix issue heroku : Failed to find application: 'app'
+server = app.server
+
 image_filename = 'assets/Bundesliga1.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
