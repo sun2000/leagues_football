@@ -477,6 +477,5 @@ def load_season_division_points_graph(division, season):
 if __name__ == '__main__':
     app.run_server(
         debug=True,
-        host='localhost',
-        port=8050,
+        threaded=True
     )
