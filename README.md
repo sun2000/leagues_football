@@ -13,22 +13,26 @@ There are installation instructions in the Dash Documentation. Alternatively, we
 
 Clone the project leagues_football
 ```
-git clone ....
+git clone https://github.com/sun2000/leagues_football.git
 cd leagues_football
-
-```
-
-
-```
-virtualenv -p /Library/Frameworks/Python.framework/Versions/3.8/bin/python3 dash-app
-source dash-app/bin/activate
-
-pip install -r requirements.txt --force-reinstall
 ```
 
 Data is stored in an SQLite database
 ```
 /data/soccer-stats.db
+```
+
+Install python 3.6.10 with pyenv
+```
+pyenv install 3.6.10
+```
+
+Create a virtualenv with python version 3.6.10
+```
+pyenv virtualenv 3.6.10 apps3.6.10
+eval "$(pyenv init -)"
+pyenv activate apps3.6.10
+pip install -r requirements.txt --force-reinstall
 ```
 
 
@@ -42,4 +46,8 @@ $ export DB_URI=sqlite:///data/soccer-stats.db && python app.py
 ```
 
 
+Update packages if you want to use jupyter notebook for dev
+```
 pip3 install --upgrade jupyter_core jupyter_client
+jupyter notebook
+```
