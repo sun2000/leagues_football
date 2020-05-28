@@ -51,3 +51,15 @@ Update packages if you want to use jupyter notebook for dev
 pip3 install --upgrade jupyter_core jupyter_client
 jupyter notebook
 ```
+
+
+
+Deploy application using `heroku`
+```
+heroku login
+heroku create -m "leags-football-2016"
+heroku git:remote -a leags-football-2016
+git push remote master
+git push heroku  master
+heroku ps:scale web=1
+```
