@@ -63,3 +63,9 @@ git push remote master
 git push heroku  master
 heroku ps:scale web=1
 ```
+
+
+Check logs for the deployment
+```
+heroku logs --tail
+```
