@@ -77,7 +77,7 @@ def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
     # results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
-    match_results = fetch_data(f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A")
+    match_results = fetch_data(f"SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC")
     return match_results
 
 
@@ -116,7 +116,7 @@ def draw_season_points_graph(results):
 
 def draw_barchart_season_division_graph(results):
     # sort Rank - descending order
-    results.sort_values(by=['Rank'], inplace=True, ascending=False)
+    results.sort_values(by=['points'], inplace=True, ascending=False)
     teams = results['team']
     points = results['points']
 
