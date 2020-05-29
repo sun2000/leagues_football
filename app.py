@@ -77,7 +77,10 @@ def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
     # results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
-    match_results = fetch_data(f"""SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) A""")
+    match_results = fetch_data(f"""SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC""")
+    # SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM
+    match_results['rank']= (match_results.sort_values(by=['points', 'win', 'draw'], ascending = (False, False, True))['points']).rank(method='first')
+    match_results.sort_values(by=['rank'], inplace=True, ascending=True)
         # f"""SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank
         # FROM (
         #     SELECT team,
@@ -100,12 +103,12 @@ def calculate_season_summary(results):
     record = results.groupby(by=['result'])['team'].count()
     summary = pd.DataFrame(
         data={
-            'W': record['W'],
-            'L': record['L'],
-            'D': record['D'],
-            'Points': results['points'].sum()
+            'Matchs Winner': record['W'],
+            'Matchs Loser': record['L'],
+            'Matchs Drawer': record['D'],
+            'Total Points': results['points'].sum()
         },
-        columns=['W', 'D', 'L', 'Points'],
+        columns=['Matchs Winner', 'Matchs Drawer', 'Matchs Loser', 'Total Points'],
         index=results['team'].unique(),
     )
     return summary
@@ -130,7 +133,7 @@ def draw_season_points_graph(results):
 
 def draw_barchart_season_division_graph(results):
     # sort Rank - descending order
-    results.sort_values(by=['points'], inplace=True, ascending=False)
+    # results.sort_values(by=['rank'], inplace=True, ascending=True)
     teams = results['team']
     points = results['points']
 
