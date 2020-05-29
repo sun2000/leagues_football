@@ -29,6 +29,7 @@ pyenv install 3.6.10
 
 Create a virtualenv with python version 3.6.10
 ```
+rm -r /Users/haroun/.pyenv/versions/apps3.6.10
 pyenv virtualenv 3.6.10 apps3.6.10
 eval "$(pyenv init -)"
 pyenv activate apps3.6.10
