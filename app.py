@@ -169,7 +169,7 @@ def onLoad_division_options():
 #     'https://codepen.io/chriddyp/pen/bWLwgP.css'
 # ]
 # app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-app = dash.Dash()
+app = dash.Dash(csrf_protect=False)
 
 # app.css.config.serve_locally = False
 
@@ -442,5 +442,5 @@ def load_season_division_points_graph(division, season):
 if __name__ == '__main__':
     app.run_server(
         debug=True,
-        threaded=True
+        threaded=True,
     )
