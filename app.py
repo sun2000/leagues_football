@@ -48,8 +48,8 @@ def get_divisions():
 def get_seasons(division):
     '''Returns the seasons of the datbase store'''
 
-    seasons_query =  f"SELECT DISTINCT season FROM results WHERE division='{division}'"
-    seasons = fetch_data(seasons_query)
+    # seasons_query =  f"SELECT DISTINCT season FROM results WHERE division='{division}'"
+    seasons = fetch_data(f"SELECT DISTINCT season FROM results WHERE division='{division}'")
     seasons = list(seasons['season'].sort_values(ascending=False))
     return seasons
 
@@ -57,8 +57,8 @@ def get_seasons(division):
 def get_teams(division, season):
     '''Returns all teams playing in the division in the season'''
 
-    teams_query = f"SELECT DISTINCT team FROM results WHERE division='{division}' AND season='{season}'"
-    teams = fetch_data(teams_query)
+    # teams_query = f"SELECT DISTINCT team FROM results WHERE division='{division}' AND season='{season}'"
+    teams = fetch_data(f"SELECT DISTINCT team FROM results WHERE division='{division}' AND season='{season}'")
     teams = list(teams['team'].sort_values(ascending=True))
     return teams
 
@@ -66,8 +66,8 @@ def get_teams(division, season):
 def get_match_results(division, season, team):
     '''Returns match results for the selected prompts'''
 
-    results_query = f"SELECT date, team, opponent, goals, goals_opp, result, points FROM results WHERE division='{division}' AND season='{season}' AND team='{team}' ORDER BY date ASC"
-    match_results = fetch_data(results_query)
+    # results_query = f"SELECT date, team, opponent, goals, goals_opp, result, points FROM results WHERE division='{division}' AND season='{season}' AND team='{team}' ORDER BY date ASC"
+    match_results = fetch_data(f"SELECT date, team, opponent, goals, goals_opp, result, points FROM results WHERE division='{division}' AND season='{season}' AND team='{team}' ORDER BY date ASC")
     return match_results
 
 
@@ -76,8 +76,8 @@ def get_match_results(division, season, team):
 def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
-    results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
-    match_results = fetch_data(results_query)
+    # results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
+    match_results = fetch_data(f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A")
     return match_results
 
 
