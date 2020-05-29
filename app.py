@@ -28,7 +28,7 @@ conn = create_engine(os.environ['DB_URI']) #'sqlite:///data/soccer-stats.db'
 ###########################
 
 def fetch_data(q):
-    result = pd.read_sql(
+    result = pd.read_sql_query(
         sql=q,
         con=conn
     )
