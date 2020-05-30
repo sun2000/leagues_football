@@ -77,10 +77,16 @@ def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
     # results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
-    match_results = fetch_data(f"""SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC""")
+    match_results = fetch_data(f"""SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC,  win DESC, lose, draw DESC""")
     # SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM
-    match_results['rank']= (match_results.sort_values(by=['points', 'win', 'draw'], ascending = (False, False, True))['points']).rank(method='first')
-    match_results.sort_values(by=['rank'], inplace=True, ascending=True)
+    # match_results['rank']= (match_results.sort_values(by=['points', 'win', 'draw', 'lose'], ascending = (False, False, False, True))['points']).rank(method='max')
+    # match_results.sort_values(by=['points'], inplace=True, ascending=False)
+    # match_results['rank']= (match_results['points']).rank(method='min')
+    match_results['rank'] = match_results.index + 1
+    # df.groupby('Auction_ID')['Bid_Price'].rank(ascending=False)
+    # match_results['rank']=match_results.groupby(['division', 'season'])['points'].rank(ascending=False)
+    # match_results=match_results.drop(['division', 'season'], axis=1)
+    # match_results.sort_values(by=['rank'], inplace=True, ascending=False)
         # f"""SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank
         # FROM (
         #     SELECT team,
@@ -114,7 +120,7 @@ def calculate_season_summary(results):
     return summary
 
 
-def draw_season_points_graph(results):
+def draw_season_points_graph(results, division, season, team):
 
     dates = results['date']
     points = results['points'].cumsum()
@@ -124,16 +130,16 @@ def draw_season_points_graph(results):
             go.Scatter(x=dates, y=points, mode='lines+markers')
         ],
         layout=go.Layout(
-            title='Points Accumulation',
+            title='Points Accumulation for team {}, season {}, division {}'.format(team , season, division),
             showlegend=False
         )
     )
 
     return figure
 
-def draw_barchart_season_division_graph(results):
+def draw_barchart_season_division_graph(results, division, season):
     # sort Rank - descending order
-    # results.sort_values(by=['rank'], inplace=True, ascending=True)
+    results.sort_values(by=['rank'], inplace=True, ascending=False)
     teams = results['team']
     points = results['points']
 
@@ -141,7 +147,7 @@ def draw_barchart_season_division_graph(results):
         go.Bar(x=points, y=teams, orientation='h', textposition='auto')
     ]
     layout=go.Layout(
-        title='Teams ranking by division and season',
+        title=('<span style="font-size: 12px;">Teams ranking for {} division and {} season</span>'.format(division, season)),
         showlegend=False,
         margin=dict(l=100, r=20, t=70, b=70),
         xaxis={'categoryorder':'total descending'}
@@ -413,6 +419,9 @@ def load_season_summary(division, season, team):
     if len(results) > 0:
         summary = calculate_season_summary(results)
         table = ff.create_table(summary)
+        # Update the margins to add a title and see graph x-labels.
+        table.layout.margin.update({'t':75, 'l':50})
+        table.layout.update({'title': 'Summary for team {}, season {}, division {}'.format(team , season, division)})
 
     return table
 
@@ -431,7 +440,7 @@ def load_season_points_graph(division, season, team):
 
     figure = []
     if len(results) > 0:
-        figure = draw_season_points_graph(results)
+        figure = draw_season_points_graph(results, division, season, team)
 
     return figure
 
@@ -449,7 +458,7 @@ def load_season_division_points_graph(division, season):
 
     figure = []
     if len(results) > 0:
-        figure = draw_barchart_season_division_graph(results)
+        figure = draw_barchart_season_division_graph(results, division, season)
 
     return figure
 
