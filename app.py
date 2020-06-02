@@ -12,6 +12,7 @@ import glob
 import os
 
 import plotly.graph_objs as go
+import dash_table
 
 
 # pydata stack
@@ -77,7 +78,7 @@ def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
     # results_query = f"SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM (SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC) as A"
-    match_results = fetch_data(f"""SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC,  win DESC, lose, draw DESC""")
+    match_results = fetch_data(f"""SELECT team, sum(goals) as goals, SUM(CASE WHEN result = 'W' THEN 1 Else 0 END) as win, SUM(CASE WHEN result = 'D' THEN 1 Else 0 END) as draw, SUM(CASE WHEN result = 'L' THEN 1 Else 0 END) as lose, sum(points) as points FROM results where division= '{division}' and season='{season}' GROUP BY  division, season, team ORDER BY points DESC,  win DESC, lose, draw DESC, goals DESC""")
     # SELECT A.* , ROW_NUMBER() OVER (ORDER BY points DESC) Rank FROM
     # match_results['rank']= (match_results.sort_values(by=['points', 'win', 'draw', 'lose'], ascending = (False, False, False, True))['points']).rank(method='max')
     # match_results.sort_values(by=['points'], inplace=True, ascending=False)
@@ -175,6 +176,21 @@ def generate_table(dataframe, max_rows=10):
         ]) for i in range(min(len(dataframe), max_rows))]
     )
 
+# def generate_table(df):
+    # return html.Div(
+    #     [dash_table.DataTable(
+    #         columns=[{"name": i, "id": i} for i in df.columns],
+    #         data=df.to_dict('records'),
+    #         pagination_mode='fe',
+    #         pagination_settings={
+    #             'displayed_pages': 1,
+    #             'current_page': 0,
+    #             'page_size': 20,
+    #         },
+    #     )]
+    # )
+
+
 
 
 def onLoad_division_options():
@@ -197,12 +213,9 @@ app = dash.Dash(csrf_protect=False)
 # app.css.config.serve_locally = False
 
 app.css.append_css({
-    "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
+    # "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
+    "external_url": "/static/Bootstrap.css"
 })
-# app.css.append_css({
-#     "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
-#     # "external_url": "/static/Bootstrap.css"
-# })
 
 #fix issue heroku : Failed to find application: 'app'
 server = app.server
