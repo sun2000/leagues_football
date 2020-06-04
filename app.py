@@ -430,7 +430,7 @@ def load_match_results(division, season):
 def load_season_summary(division, season, team):
     results = get_match_results(division, season, team)
 
-    table = dash.no_update
+    table = []#dash.no_update
     if len(results) > 0:
         summary = calculate_season_summary(results)
         table = ff.create_table(summary)
@@ -453,7 +453,7 @@ def load_season_summary(division, season, team):
 def load_season_points_graph(division, season, team):
     results = get_match_results(division, season, team)
 
-    figure = dash.no_update
+    figure = []#dash.no_update
     if len(results) > 0:
         figure = draw_season_points_graph(results, division, season, team)
 
@@ -471,7 +471,7 @@ def load_season_points_graph(division, season, team):
 def load_season_division_points_graph(division, season):
     results = get_match_results_division_season(division, season)
 
-    figure = dash.no_update
+    figure = []#dash.no_update
     if len(results) > 0:
         figure = draw_barchart_season_division_graph(results, division, season)
 
