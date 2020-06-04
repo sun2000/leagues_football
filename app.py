@@ -280,7 +280,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 3,  "offset": 0}
+                width={"size": 4,  "offset": 0}
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -293,7 +293,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 3}
+                width={"size": 4}
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -305,7 +305,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 3,  "offset": 0}
+                width={"size": 4,  "offset": 0}
             )
         ], justify="around"),
         # html.H3("Soccer Results Viewer"),
