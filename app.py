@@ -247,7 +247,7 @@ app.layout = html.Div(
         dbc.Row([
             dbc.Col(
                 html.H1("Soccer Results Viewer"),
-                width={"size": 8,  "offset": 1} # lg=3, md=6, xs=12
+                width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
             ),
             dbc.Col(
                 dbc.Card(
@@ -258,12 +258,12 @@ app.layout = html.Div(
                             'width': '100px',
                             'float': 'right',
                             'position': 'relative',
-                            'padding-top': 0,
-                            'padding-right': 0
+                            'padding-top': 1,
+                            'padding-right': 1
                         }
                     )
                 ),
-                width={"offset": 1}
+                width={"size": 1, "offset": 0}
             )
         ]),
         #
@@ -280,7 +280,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 4,  "offset": 0}
+                #width="auto" # width={"lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -293,7 +293,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 4}
+                #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -305,9 +305,9 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 4,  "offset": 0}
+                #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
             )
-        ], justify="around"),
+        ], no_gutters = False), #justify="around",
         # html.H3("Soccer Results Viewer"),
         dbc.Row([
             dbc.Col(
