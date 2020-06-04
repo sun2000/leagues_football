@@ -256,8 +256,8 @@ app.layout = html.Div(
                         style={
                             'height': '100px',
                             'width': '100px',
-                            # 'float': 'right',
-                            # 'position': 'relative',
+                            'float': 'right',
+                            'position': 'relative',
                             'padding-top': 0,
                             'padding-right': 0
                         }
@@ -280,7 +280,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 3,  "offset": 1}
+                width={"size": 3,  "offset": 0}
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -305,9 +305,9 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 3,  "offset": -1}
+                width={"size": 3,  "offset": 0}
             )
-        ], justify="between"),
+        ], justify="around"),
         # html.H3("Soccer Results Viewer"),
         dbc.Row([
             dbc.Col(
