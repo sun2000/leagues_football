@@ -15,6 +15,9 @@ import plotly.graph_objs as go
 import dash_table
 
 
+import dash_bootstrap_components as dbc
+
+
 # pydata stack
 import pandas as pd
 from sqlalchemy import create_engine
@@ -116,7 +119,7 @@ def calculate_season_summary(results):
             'Total Points': results['points'].sum()
         },
         columns=['Matchs Winner', 'Matchs Drawer', 'Matchs Loser', 'Total Points'],
-        index=results['team'].unique(),
+        index=results['team'].unique()
     )
     return summary
 
@@ -137,6 +140,7 @@ def draw_season_points_graph(results, division, season, team):
     )
 
     return figure
+
 
 def draw_barchart_season_division_graph(results, division, season):
     # sort Rank - descending order
@@ -208,17 +212,20 @@ def onLoad_division_options():
 #     'https://codepen.io/chriddyp/pen/bWLwgP.css'
 # ]
 # app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-app = dash.Dash(csrf_protect=False)
+# app = dash.Dash(csrf_protect=False)
+
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # app.css.config.serve_locally = False
 
-app.css.append_css({
-    # "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
-    "external_url": "/static/Bootstrap.css"
-})
+# app.css.append_css({
+#     # "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
+#     "external_url": "/static/Bootstrap.css"
+# })
 
 #fix issue heroku : Failed to find application: 'app'
 server = app.server
+
 
 image_filename = 'assets/Bundesliga1.png' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
@@ -236,114 +243,109 @@ initial_season_value = get_seasons(initial_division_value)[0]
 
 app.layout = html.Div(
     [
-        html.Div(
-            [
-                # Page Header
-                html.Div(
+        # Page Header
+        dbc.Row([
+            dbc.Col(
+                html.H1("Soccer Results Viewer"),
+                width={"size": 8,  "offset": 1} # lg=3, md=6, xs=12
+            ),
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardImg(
+                        id="logo-id",
+                        style={
+                            'height': '100px',
+                            'width': '100px',
+                            # 'float': 'right',
+                            # 'position': 'relative',
+                            'padding-top': 0,
+                            'padding-right': 0
+                        }
+                    )
+                ),
+                width={"offset": 1}
+            )
+        ]),
+        #
+        dbc.Row([
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
                     [
-                        html.H1('Soccer Results Viewer', className="nine columns"),
-                        html.Img(id="image",
-
-                            # # src="/assets/bundesliga.png",
-                            # src='data:image/png;base64,{}'.format(encoded_image.decode()),
-                            # className='three columns',
-                            style={
-                                'height': '7%',
-                                'width': '7%',
-                                'float': 'right',
-                                'position': 'relative',
-                                'padding-top': 0,
-                                'padding-right': 0
-                            },
-                        ),
-                    ]
-                )
-            ], className="row"
-        ),
-        # Dropdown Grid
-        html.Div(
-            [
-                html.Div(
-                    [
-                        html.P('Select Division'),
-                        # Select Division Dropdown
+                        "Select Division",
                         dcc.Dropdown(
                             id='division-selector',
                             options=onLoad_division_options(),
                             value=initial_division_value
                         )
-                    ],
-                    className='four columns',
-                    style={'margin-top': '10'}
+                    ]
                 ),
-
-                # Select Season Dropdown
-                html.Div(
+                width={"size": 3,  "offset": 1}
+            ),
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
                     [
-                        html.P('Select Season'),
-                        html.Div(
-                            dcc.Dropdown(
-                                id='season-selector',
-                                value=initial_season_value
-                            )
+                        "Select Season",
+                        dcc.Dropdown(
+                            id='season-selector',
+                            value=initial_season_value
                         )
-                    ],
-                    className='four columns',
-                    style={'margin-top': '10'}
+                    ]
                 ),
-                # Select Team Dropdown
-                html.Div(
+                width={"size": 3}
+            ),
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
                     [
-                        html.Div('Select Team to view details'),
-                        html.Div(
-                            dcc.Dropdown(
-                                id='team-selector'
-                            )
+                        "Select Team to view details",
+                        dcc.Dropdown(
+                            id='team-selector'
                         )
-                    ],
-                    className='four columns',
-                    style={'margin-top': '10'}
-                )
-            ], className="row"
-        ),
-        # Match Results Grid
-        html.Div(
-            [
-                # Match Results Table
-                html.Div(
-                    [
-                        html.Table(id='match-results'),
-                    ],
-                    className='six columns',
-                    style={'margin-top': '10'}
+                    ]
                 ),
-                # Match Results Table
-                html.Div(
-                    [
-                        # barchart by division
-                        dcc.Graph(id='bar-chart-graph')
-                    ],
-                    className='six columns',
-                    style={'margin-top': '10'}
-                )
-            ], className="row"
-        ),
-        html.Div(
-            [
-                # Season Summary Table and Graph
-                html.Div(
-                    [
-                    # summary table
-                        dcc.Graph(id='season-summary'),
-
-                        # graph
-                        dcc.Graph(id='season-graph')
-                        # style={},
-                    ],
-                )
-            ],
-        )
-    ], className='ten columns offset-by-one'
+                width={"size": 3,  "offset": -1}
+            )
+        ], justify="between"),
+        # html.H3("Soccer Results Viewer"),
+        dbc.Row([
+            dbc.Col(
+                # Select Division Dropdown
+                html.Table(id='match-results'),
+                width={"size": 5,  "offset": 1}
+            ),
+            dbc.Col(
+                # Select Division Dropdown
+                # barchart by division
+                dcc.Graph(id='bar-chart-graph'),
+                width={"size": 5,  "offset": -1}
+            )
+        ]),
+        dbc.Row([
+            dbc.Col(
+                dcc.Graph(id='season-summary'),
+                # width={"offset": -1}
+            )
+        ], justify="center"),
+        dbc.Row([
+            dbc.Col(
+                dcc.Graph(id='season-graph'),
+                # width={"offset": -1}
+            )
+        ], justify="center")
+        # dbc.Row([
+        #     dbc.Col(
+        #         # summary table
+        #         dcc.Graph(id='season-summary'),
+        #     ),
+        #     dbc.Col(
+        #         # summary table
+        #         # graph
+        #         dcc.Graph(id='season-graph'),
+        #     )
+        # ]),
+    ]
 )
 
 
@@ -355,7 +357,7 @@ list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_
 print("list_of_images: {}".format(list_of_images))
 
 @app.callback(
-    dash.dependencies.Output('image', 'src'),
+    dash.dependencies.Output('logo-id', 'src'),
     [dash.dependencies.Input('division-selector', 'value')])
 def update_image_src(division):
     image_name = '{}.png'.format(division)
@@ -428,7 +430,7 @@ def load_match_results(division, season):
 def load_season_summary(division, season, team):
     results = get_match_results(division, season, team)
 
-    table = []
+    table = dash.no_update
     if len(results) > 0:
         summary = calculate_season_summary(results)
         table = ff.create_table(summary)
@@ -451,7 +453,7 @@ def load_season_summary(division, season, team):
 def load_season_points_graph(division, season, team):
     results = get_match_results(division, season, team)
 
-    figure = []
+    figure = dash.no_update
     if len(results) > 0:
         figure = draw_season_points_graph(results, division, season, team)
 
@@ -469,7 +471,7 @@ def load_season_points_graph(division, season, team):
 def load_season_division_points_graph(division, season):
     results = get_match_results_division_season(division, season)
 
-    figure = []
+    figure = dash.no_update
     if len(results) > 0:
         figure = draw_barchart_season_division_graph(results, division, season)
 
