@@ -266,6 +266,7 @@ app.layout = html.Div(
                 width={"size": 1, "offset": 0}
             )
         ]),
+        html.Br(),
         #
         dbc.Row([
             dbc.Col(
