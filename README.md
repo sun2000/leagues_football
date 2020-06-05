@@ -22,17 +22,17 @@ Data is stored in an SQLite database
 /data/soccer-stats.db
 ```
 
-Install python 3.6.10 with pyenv
+Install python 3.7.2 with pyenv
 ```
-pyenv install 3.6.10
+pyenv install 3.7.2
 ```
 
-Create a virtualenv with python version 3.6.10
+Create a virtualenv with python version 3.7.2
 ```
-rm -r /Users/haroun/.pyenv/versions/apps3.6.10
-pyenv virtualenv 3.6.10 apps3.6.10
+rm -r /Users/haroun/.pyenv/versions/apps3.7.2
+pyenv virtualenv 3.7.2 apps3.7.2
 eval "$(pyenv init -)"
-pyenv activate apps3.6.10
+pyenv activate apps3.7.2
 pip install -r requirements.txt --force-reinstall
 ```
 
