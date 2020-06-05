@@ -134,7 +134,8 @@ def draw_season_points_graph(results, division, season, team):
             go.Scatter(x=dates, y=points, mode='lines+markers')
         ],
         layout=go.Layout(
-            title='Points Accumulation for team {}, season {}, division {}'.format(team , season, division),
+            # title=html.Span('First Part lknqkcnqcknq'),
+            title='<span style="font-size: 12px;">Points Accumulation for team {}, season {}, division {}</span>'.format(team , season, division),
             showlegend=False
         )
     )
@@ -240,6 +241,7 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 initial_division_value = get_divisions()[0]
 initial_season_value = get_seasons(initial_division_value)[0]
+initial_team = get_teams(initial_division_value, initial_season_value)[0]
 
 app.layout = html.Div(
     [
@@ -259,7 +261,11 @@ app.layout = html.Div(
                             'float': 'right',
                             'position': 'relative',
                             'padding-top': 1,
-                            'padding-right': 1
+                            'padding-right': 1,
+                            # "background": "black",
+                            # "border-color": "#FF0000",
+                            "border-width": "5%",
+                            "border":"1px double black"
                         }
                     )
                 ),
@@ -281,7 +287,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                #width="auto" # width={"lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
+                width={"size": 3, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -293,36 +299,41 @@ app.layout = html.Div(
                             value=initial_season_value
                         )
                     ]
-                ),
+                ),  width={"size": 3, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
-            dbc.Col(
-                # Select Division Dropdown
-                html.Label(
-                    [
-                        "Select Team to view details",
-                        dcc.Dropdown(
-                            id='team-selector'
-                        )
-                    ]
-                ),
-                #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
-            )
         ], no_gutters = False), #justify="around",
         # html.H3("Soccer Results Viewer"),
         dbc.Row([
             dbc.Col(
                 # Select Division Dropdown
                 html.Table(id='match-results'),
-                width={"size": 5,  "offset": 1}
+                width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
             ),
             dbc.Col(
                 # Select Division Dropdown
                 # barchart by division
                 dcc.Graph(id='bar-chart-graph'),
-                width={"size": 5,  "offset": -1}
+                width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
             )
         ]),
+        html.Br(),
+        dbc.Row([
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
+                    [
+                        "Select Team to view details",
+                        dcc.Dropdown(
+                            id='team-selector',
+                            value=initial_team
+                        )
+                    ]
+                ),
+                width={"size": 3, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+                #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
+            )
+        ], justify="left"),
         dbc.Row([
             dbc.Col(
                 dcc.Graph(id='season-summary'),
@@ -346,7 +357,7 @@ app.layout = html.Div(
         #         dcc.Graph(id='season-graph'),
         #     )
         # ]),
-    ]
+    ], style={ "padding-left": "5%", "padding-right": "5%"} # "background-color":"blue"
 )
 
 
@@ -389,6 +400,16 @@ def populate_season_selector(division):
     ]
 
 
+
+@app.callback(
+    Output(component_id='season-selector', component_property='value'),
+    [Input(component_id='season-selector', component_property='options')]
+)
+def set_season_selector(available_options):
+    return available_options[0]['value']
+
+
+
 # Load Teams into dropdown
 @app.callback(
     Output(component_id='team-selector', component_property='options'),
@@ -403,6 +424,16 @@ def populate_team_selector(division, season):
         {'label': team, 'value': team}
         for team in teams
     ]
+
+
+@app.callback(
+    Output(component_id='team-selector', component_property='value'),
+    [
+        Input(component_id='team-selector', component_property='options'),
+    ]
+)
+def set_season_selector(available_options):
+    return available_options[0]['value']
 
 
 # Load Match results
@@ -437,7 +468,7 @@ def load_season_summary(division, season, team):
         table = ff.create_table(summary)
         # Update the margins to add a title and see graph x-labels.
         table.layout.margin.update({'t':75, 'l':50})
-        table.layout.update({'title': 'Summary for team {}, season {}, division {}'.format(team , season, division)})
+        table.layout.update({'title': '<span style="font-size: 12px;"> Summary for team {}, season {}, division {}</span>'.format(team , season, division)})
 
     return table
 
