@@ -286,7 +286,7 @@ app.layout = html.Div(
                             value=initial_division_value,
                             style={
                                 # 'height': '5px',
-                                'width': '100%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
@@ -303,12 +303,12 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id='season-selector',
                             value=initial_season_value,
-                            # style={
-                            # #     'height': '2px',
-                            #     'width': '100%',
-                            # #     'font-size': "50%",
-                            # #     'min-height': '1px',
-                            # },
+                            style={
+                            #     'height': '2px',
+                                'width': '150%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
                         )
                     ]
                 ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
