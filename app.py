@@ -305,7 +305,7 @@ app.layout = html.Div(
                             value=initial_season_value,
                             style={
                             #     'height': '2px',
-                                'width': '150%',
+                                'width': '100%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
