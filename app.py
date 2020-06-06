@@ -279,7 +279,7 @@ app.layout = html.Div(
                 # Select Division Dropdown
                 html.Label(
                     [
-                        "Select Division",
+                        "Select Division:         ",
                         dcc.Dropdown(
                             id='division-selector',
                             options=onLoad_division_options(),
@@ -293,7 +293,7 @@ app.layout = html.Div(
                 # Select Division Dropdown
                 html.Label(
                     [
-                        "Select Season",
+                        "Select Season:          ",
                         dcc.Dropdown(
                             id='season-selector',
                             value=initial_season_value
