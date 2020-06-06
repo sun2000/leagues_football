@@ -341,12 +341,12 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id='team-selector',
                             value=initial_team,
-                            # style={
-                            # #     'height': '2px',
-                            #     'width': '100%',
-                            # #     'font-size': "50%",
-                            # #     'min-height': '1px',
-                            # },
+                            style={
+                            #     'height': '2px',
+                                'width': '150%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
                         ),
 
                     ]
