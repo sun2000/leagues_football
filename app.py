@@ -304,6 +304,7 @@ app.layout = html.Div(
             ),
         ], no_gutters = False), #justify="around",
         # html.H3("Soccer Results Viewer"),
+        html.Br(),
         dbc.Row([
             dbc.Col(
                 # Select Division Dropdown
