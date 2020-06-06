@@ -283,11 +283,17 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id='division-selector',
                             options=onLoad_division_options(),
-                            value=initial_division_value
+                            value=initial_division_value,
+                            # style={
+                            #     'height': '5px',
+                            #     'width': '80%',
+                            #     'font-size': "50%",
+                            #     'min-height': '3px',
+                            # },
                         )
                     ]
                 ),
-                width={"size": 5} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -296,14 +302,21 @@ app.layout = html.Div(
                         "Select Season:          ",
                         dcc.Dropdown(
                             id='season-selector',
-                            value=initial_season_value
+                            value=initial_season_value,
+                            # style={
+                            #     'height': '2px',
+                            #     'width': '80%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            # },
                         )
                     ]
-                ),  width={"size": 5} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
         ]), #justify="around",, no_gutters = False
         # html.H3("Soccer Results Viewer"),
+        html.Br(),
         html.Br(),
         dbc.Row([
             dbc.Col(
