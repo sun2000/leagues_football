@@ -314,7 +314,7 @@ app.layout = html.Div(
                 ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
-        ], ustify="around",), #j, no_gutters = False
+        ], justify="left", no_gutters = False), #j,
         # html.H3("Soccer Results Viewer"),
         html.Br(),
         html.Br(),
@@ -366,7 +366,7 @@ app.layout = html.Div(
                 dcc.Graph(id='season-graph'),
                 # width={"offset": -1}
             )
-        ], justify="center")
+        ], justify="center"),
         # dbc.Row([
         #     dbc.Col(
         #         # summary table
