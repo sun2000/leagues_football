@@ -343,7 +343,7 @@ app.layout = html.Div(
                             value=initial_team,
                             style={
                             #     'height': '2px',
-                                'width': '120%',
+                                'width': '100%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
