@@ -286,7 +286,7 @@ app.layout = html.Div(
                             value=initial_division_value,
                             style={
                                 # 'height': '5px',
-                                'width': '80%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
@@ -305,7 +305,7 @@ app.layout = html.Div(
                             value=initial_season_value,
                             style={
                             #     'height': '2px',
-                                'width': '80%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
@@ -343,7 +343,7 @@ app.layout = html.Div(
                             value=initial_team,
                             style={
                             #     'height': '2px',
-                                'width': '80%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
