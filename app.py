@@ -303,18 +303,18 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id='season-selector',
                             value=initial_season_value,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '100%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
                         )
                     ]
                 ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
-        ]), #justify="around",, no_gutters = False
+        ], ustify="around",), #j, no_gutters = False
         # html.H3("Soccer Results Viewer"),
         html.Br(),
         html.Br(),
@@ -341,12 +341,12 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             id='team-selector',
                             value=initial_team,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '100%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
                         ),
 
                     ]
