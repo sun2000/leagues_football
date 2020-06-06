@@ -287,7 +287,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 4, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -299,7 +299,7 @@ app.layout = html.Div(
                             value=initial_season_value
                         )
                     ]
-                ),  width={"size": 4, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
         ]), #justify="around",, no_gutters = False
@@ -331,7 +331,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                width={"size": 4, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
             )
         ], justify="left"),
