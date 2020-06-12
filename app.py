@@ -1,4 +1,5 @@
 # standard library
+#https://github.com/plotly/dash/issues/844
 import os
 
 # dash libs
@@ -216,6 +217,7 @@ def onLoad_division_options():
 # app = dash.Dash(csrf_protect=False)
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.config['suppress_callback_exceptions']=True
 
 # app.css.config.serve_locally = False
 
@@ -243,77 +245,79 @@ initial_division_value = get_divisions()[0]
 initial_season_value = get_seasons(initial_division_value)[0]
 initial_team = get_teams(initial_division_value, initial_season_value)[0]
 
-app.layout = html.Div(
-    [
-        # Page Header
-        dbc.Row([
-            dbc.Col(
-                html.H1("Soccer Results Viewer"),
-                width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
+
+
+
+# https://community.plotly.com/t/is-there-a-way-to-synchronize-dropdowns-across-tabs/18244/2
+content_tab1 = html.Div([
+    dbc.Row([
+        dbc.Col(
+            html.H1("Soccer Results Viewer"),
+            width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
+        ),
+        dbc.Col(
+            dbc.Card(
+                dbc.CardImg(
+                    id="logo-id",
+                    style={
+                        'height': '100px',
+                        'width': '100px',
+                        'float': 'right',
+                        'position': 'relative',
+                        'padding-top': 1,
+                        'padding-right': 1,
+                        # "background": "black",
+                        # "border-color": "#FF0000",
+                        "border-width": "5%",
+                        "border":"1px double black"
+                    }
+                )
             ),
-            dbc.Col(
-                dbc.Card(
-                    dbc.CardImg(
-                        id="logo-id",
+            width={"size": 1, "offset": 0}
+        )
+    ]),
+    html.Br(),
+    #
+    dbc.Row([
+        dbc.Col(
+            # Select Division Dropdown
+            html.Label(
+                [
+                    "Select Division ",
+                    dcc.Dropdown(
+                        id='division-selector',
+                        options=onLoad_division_options(),
+                        value=initial_division_value,
                         style={
-                            'height': '100px',
-                            'width': '100px',
-                            'float': 'right',
-                            'position': 'relative',
-                            'padding-top': 1,
-                            'padding-right': 1,
-                            # "background": "black",
-                            # "border-color": "#FF0000",
-                            "border-width": "5%",
-                            "border":"1px double black"
-                        }
+                            # 'height': '5px',
+                            'width': '100%',
+                            # 'font-size': "50%",
+                            # 'min-height': '3px',
+                        },
                     )
-                ),
-                width={"size": 1, "offset": 0}
-            )
-        ]),
-        html.Br(),
-        #
-        dbc.Row([
-            dbc.Col(
-                # Select Division Dropdown
-                html.Label(
-                    [
-                        "Select Division ",
-                        dcc.Dropdown(
-                            id='division-selector',
-                            options=onLoad_division_options(),
-                            value=initial_division_value,
-                            style={
-                                # 'height': '5px',
-                                'width': '150%',
-                                # 'font-size': "50%",
-                                # 'min-height': '3px',
-                            },
-                        )
-                    ]
-                ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                ]
             ),
-            dbc.Col(
-                # Select Division Dropdown
-                html.Label(
-                    [
-                        "Select Season",
-                        dcc.Dropdown(
-                            id='season-selector',
-                            value=initial_season_value,
-                            style={
-                            #     'height': '2px',
-                                'width': '150%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
-                        )
-                    ]
-                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
-                #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
-            ),
+            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+        ),
+        dbc.Col(
+            # Select Division Dropdown
+            html.Label(
+                [
+                    "Select Season",
+                    dcc.Dropdown(
+                        id='season-selector',
+                        value=initial_season_value,
+                        style={
+                        #     'height': '2px',
+                            'width': '100%',
+                        #     'font-size': "50%",
+                        #     'min-height': '1px',
+                        },
+                    )
+                ]
+            ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+            #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
+        )
         ], justify="left", no_gutters = False), #j,
         # html.H3("Soccer Results Viewer"),
         html.Br(),
@@ -330,56 +334,183 @@ app.layout = html.Div(
                 dcc.Graph(id='bar-chart-graph'),
                 width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
             )
-        ]),
-        html.Br(),
-        dbc.Row([
-            dbc.Col(
-                # Select Division Dropdown
-                html.Label(
-                    [
-                        "Select Team to view details",
-                        dcc.Dropdown(
-                            id='team-selector',
-                            value=initial_team,
-                            style={
-                            #     'height': '2px',
-                                'width': '110%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
-                        ),
+        ])
+])
 
-                    ]
-                ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
-                #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
-            )
-        ], justify="left"),
-        dbc.Row([
+content_tab2 =  html.Div([
+    dbc.Row([
+        dbc.Col(
+            html.H1("Soccer Results Viewer"),
+            width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
+        ),
+        dbc.Col(
+            dbc.Card(
+                dbc.CardImg(
+                    id="logo-id",
+                    style={
+                        'height': '100px',
+                        'width': '100px',
+                        'float': 'right',
+                        'position': 'relative',
+                        'padding-top': 1,
+                        'padding-right': 1,
+                        # "background": "black",
+                        # "border-color": "#FF0000",
+                        "border-width": "5%",
+                        "border":"1px double black"
+                    }
+                )
+            ),
+            width={"size": 1, "offset": 0}
+        )
+    ]),
+    html.Br(),
+    #
+    dbc.Row([
+        dbc.Col(
+            # Select Division Dropdown
+            html.Label(
+                [
+                    "Select Division ",
+                    dcc.Dropdown(
+                        id='division-selector',
+                        options=onLoad_division_options(),
+                        value=initial_division_value,
+                        style={
+                            # 'height': '5px',
+                            'width': '100%',
+                            # 'font-size': "50%",
+                            # 'min-height': '3px',
+                        },
+                    )
+                ]
+            ),
+            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+        ),
+        dbc.Col(
+            # Select Division Dropdown
+            html.Label(
+                [
+                    "Select Season",
+                    dcc.Dropdown(
+                        id='season-selector',
+                        value=initial_season_value,
+                        style={
+                        #     'height': '2px',
+                            'width': '100%',
+                        #     'font-size': "50%",
+                        #     'min-height': '1px',
+                        },
+                    )
+                ]
+            ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+            #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
+        ),
+        dbc.Col(
+            # Select Division Dropdown
+            html.Label(
+                [
+                    "Select Team to view details",
+                    dcc.Dropdown(
+                        id='team-selector',
+                        value=initial_team,
+                        style={
+                        #     'height': '2px',
+                            'width': '100%',
+                        #     'font-size': "50%",
+                        #     'min-height': '1px',
+                        },
+                    ),
+
+                ]
+            ),
+            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+            #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
+        )
+    ], justify="left", no_gutters = False),
+    dbc.Row([
+        dbc.Col(
+            dcc.Graph(id='season-summary'),
+            width={"size": 12} # "offset": -1
+        ),
             dbc.Col(
-                dcc.Graph(id='season-summary'),
-                # width={"offset": -1}
-            )
-        ], justify="center"),
-        dbc.Row([
-            dbc.Col(
+                # summary table
+                # graph
                 dcc.Graph(id='season-graph'),
-                # width={"offset": -1}
+                width={"size": 12}
             )
-        ], justify="center"),
-        # dbc.Row([
-        #     dbc.Col(
-        #         # summary table
-        #         dcc.Graph(id='season-summary'),
-        #     ),
-        #     dbc.Col(
-        #         # summary table
-        #         # graph
-        #         dcc.Graph(id='season-graph'),
-        #     )
-        # ]),
-    ], style={ "padding-left": "5%", "padding-right": "5%"} # "background-color":"blue"
-)
+    ], justify="center"),
+    # dbc.Row([
+    #     dbc.Col(
+    #         dcc.Graph(id='season-graph'),
+    #         # width={"offset": -1}
+    #     )
+    # ], justify="center"),
+    # dbc.Row([
+    #     dbc.Col(
+    #         # summary table
+    #         dcc.Graph(id='season-summary'),
+    #     ),
+    #     dbc.Col(
+    #         # summary table
+    #         # graph
+    #         dcc.Graph(id='season-graph'),
+    #     )
+    # ]),
+])
+
+
+
+app.layout = html.Div([
+    dcc.Tabs(
+        id="tabs-with-classes",
+        value='tab-2',
+        parent_className='custom-tabs',
+        className='custom-tabs-container',
+        children=[
+            dcc.Tab(
+                label='Tab one',
+                value='tab-1',
+                className='custom-tab',
+                selected_className='custom-tab--selected'
+            ),
+            dcc.Tab(
+                label='Tab two',
+                value='tab-2',
+                className='custom-tab',
+                selected_className='custom-tab--selected'
+            ),
+        ]),
+    html.Div(id='tabs-content-classes')
+])
+
+
+
+
+@app.callback(Output('tabs-content-classes', 'children'),
+              [Input('tabs-with-classes', 'value')])
+def render_content(tab):
+    if tab == 'tab-1':
+        return content_tab1
+    elif tab == 'tab-2':
+        return content_tab2
+
+
+
+# app.layout = html.Div(
+#     [
+#         dcc.Tabs([
+#                 dcc.Tab(label='Tab one', children=[
+#                     content_tab1
+#                 ]
+#             ),
+#                 dcc.Tab(label='Tab two', children=[
+#                     content_tab2
+#                 ]
+#             )
+#         ])
+#     ], style={ "padding-left": "5%", "padding-right": "5%"} # "background-color":"blue"
+# )
 
 
 #############################################
@@ -391,7 +522,8 @@ print("list_of_images: {}".format(list_of_images))
 
 @app.callback(
     dash.dependencies.Output('logo-id', 'src'),
-    [dash.dependencies.Input('division-selector', 'value')])
+    [dash.dependencies.Input('division-selector', 'value')]
+)
 def update_image_src(division):
     image_name = '{}.png'.format(division)
     print("image_name: {}".format(image_name))
@@ -446,7 +578,7 @@ def populate_team_selector(division, season):
         for team in teams
     ]
 
-
+# update team
 @app.callback(
     Output(component_id='team-selector', component_property='value'),
     [
