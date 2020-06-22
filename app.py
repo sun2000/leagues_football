@@ -4,7 +4,7 @@ import os
 
 # dash libs
 import dash
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.figure_factory as ff
@@ -76,8 +76,6 @@ def get_match_results(division, season, team):
     return match_results
 
 
-
-
 def get_match_results_division_season(division, season):
     '''Returns match results for the selected prompts'''
 
@@ -132,12 +130,12 @@ def draw_season_points_graph(results, division, season, team):
 
     figure = go.Figure(
         data=[
-            go.Scatter(x=dates, y=points, mode='lines+markers')
+            go.Scatter(x=dates, y=points, mode='lines+markers', showlegend=False)
         ],
         layout=go.Layout(
             # title=html.Span('First Part lknqkcnqcknq'),
             title='<span style="font-size: 12px;">Points Accumulation for team {}, season {}, division {}</span>'.format(team , season, division),
-            showlegend=False
+            showlegend=True
         )
     )
 
@@ -242,287 +240,324 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 # style={'backgroundColor': colors['background']}, children=
 
 initial_division_value = get_divisions()[0]
+print("initial_division_value: {}".format(initial_division_value))
 initial_season_value = get_seasons(initial_division_value)[0]
+print("initial_season_value: {}".format(initial_season_value))
 initial_team = get_teams(initial_division_value, initial_season_value)[0]
-
+print("initial_team: {}".format(initial_team))
 
 
 
 # https://community.plotly.com/t/is-there-a-way-to-synchronize-dropdowns-across-tabs/18244/2
-content_tab1 = html.Div([
-    dbc.Row([
-        dbc.Col(
-            html.H1("Soccer Results Viewer"),
-            width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
-        ),
-        dbc.Col(
-            dbc.Card(
-                dbc.CardImg(
-                    id="logo-id",
-                    style={
-                        'height': '100px',
-                        'width': '100px',
-                        'float': 'right',
-                        'position': 'relative',
-                        'padding-top': 1,
-                        'padding-right': 1,
-                        # "background": "black",
-                        # "border-color": "#FF0000",
-                        "border-width": "5%",
-                        "border":"1px double black"
-                    }
-                )
+tab1_layout = [
+        dbc.Row([
+            dbc.Col(
+                html.H1("Soccer Results Viewer"),
+                width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
             ),
-            width={"size": 1, "offset": 0}
-        )
-    ]),
-    html.Br(),
-    #
-    dbc.Row([
-        dbc.Col(
-            # Select Division Dropdown
-            html.Label(
-                [
-                    "Select Division ",
-                    dcc.Dropdown(
-                        id='division-selector',
-                        options=onLoad_division_options(),
-                        value=initial_division_value,
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardImg(
+                        id="logo-id-tab1",
                         style={
-                            # 'height': '5px',
-                            'width': '100%',
-                            # 'font-size': "50%",
-                            # 'min-height': '3px',
-                        },
+                            'height': '100px',
+                            'width': '80px',
+                            # 'float': 'right',
+                            'position': 'relative',
+                            'padding-top': 1,
+                            'padding-right': 1,
+                            # "background": "black",
+                            # "border-color": "#FF0000",
+                            # "border-width": "5%",
+                            "border":"1px double black"
+                        }
                     )
-                ]
-            ),
-            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
-        ),
-        dbc.Col(
-            # Select Division Dropdown
-            html.Label(
-                [
-                    "Select Season",
-                    dcc.Dropdown(
-                        id='season-selector',
-                        value=initial_season_value,
-                        style={
-                        #     'height': '2px',
-                            'width': '100%',
-                        #     'font-size': "50%",
-                        #     'min-height': '1px',
-                        },
-                    )
-                ]
-            ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
-            #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
-        )
-        ], justify="left", no_gutters = False), #j,
-        # html.H3("Soccer Results Viewer"),
+                ),
+                width={"size": 1, "offset": 0}
+            )
+        ]),
         html.Br(),
-        html.Br(),
+        #
         dbc.Row([
             dbc.Col(
                 # Select Division Dropdown
-                html.Table(id='match-results'),
-                width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
+                html.Label(
+                    [
+                        "Select Division",
+                        dcc.Dropdown(
+                            id='division-selector-tab1',
+                            options=onLoad_division_options(),
+                            value=initial_division_value,
+                            style={
+                                # 'height': '5px',
+                                'width': '100%',
+                                # 'font-size': "50%",
+                                # 'min-height': '3px',
+                            },
+                        )
+                    ]
+                ),
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
-                # barchart by division
-                dcc.Graph(id='bar-chart-graph'),
-                width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
+                html.Label(
+                    [
+                        "Select Season",
+                        dcc.Dropdown(
+                            id='season-selector-tab1',
+                            value=initial_season_value,
+                            style={
+                            #     'height': '2px',
+                                'width': '100%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
+                        )
+                    ]
+                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             )
-        ])
-])
-
-content_tab2 =  html.Div([
-    dbc.Row([
-        dbc.Col(
-            html.H1("Soccer Results Viewer"),
-            width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
-        ),
-        dbc.Col(
-            dbc.Card(
-                dbc.CardImg(
-                    id="logo-id",
-                    style={
-                        'height': '100px',
-                        'width': '100px',
-                        'float': 'right',
-                        'position': 'relative',
-                        'padding-top': 1,
-                        'padding-right': 1,
-                        # "background": "black",
-                        # "border-color": "#FF0000",
-                        "border-width": "5%",
-                        "border":"1px double black"
-                    }
+            ], justify="left", no_gutters = False), #j,
+            # html.H3("Soccer Results Viewer"),
+            html.Br(),
+            html.Br(),
+            dbc.Row([
+                dbc.Col(
+                    # Select Division Dropdown
+                    html.Table(id='match-results'),
+                    width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
+                ),
+                dbc.Col(
+                    # Select Division Dropdown
+                    # barchart by division
+                    dcc.Graph(id='bar-chart-graph'),
+                    width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
                 )
-            ),
-            width={"size": 1, "offset": 0}
-        )
-    ]),
-    html.Br(),
-    #
-    dbc.Row([
-        dbc.Col(
-            # Select Division Dropdown
-            html.Label(
-                [
-                    "Select Division ",
-                    dcc.Dropdown(
-                        id='division-selector',
-                        options=onLoad_division_options(),
-                        value=initial_division_value,
-                        style={
-                            # 'height': '5px',
-                            'width': '100%',
-                            # 'font-size': "50%",
-                            # 'min-height': '3px',
-                        },
-                    )
-                ]
-            ),
-            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
-        ),
-        dbc.Col(
-            # Select Division Dropdown
-            html.Label(
-                [
-                    "Select Season",
-                    dcc.Dropdown(
-                        id='season-selector',
-                        value=initial_season_value,
-                        style={
-                        #     'height': '2px',
-                            'width': '100%',
-                        #     'font-size': "50%",
-                        #     'min-height': '1px',
-                        },
-                    )
-                ]
-            ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
-            #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
-        ),
-        dbc.Col(
-            # Select Division Dropdown
-            html.Label(
-                [
-                    "Select Team to view details",
-                    dcc.Dropdown(
-                        id='team-selector',
-                        value=initial_team,
-                        style={
-                        #     'height': '2px',
-                            'width': '100%',
-                        #     'font-size': "50%",
-                        #     'min-height': '1px',
-                        },
-                    ),
+            ])
+]
 
-                ]
-            ),
-            width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
-            #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
-        )
-    ], justify="left", no_gutters = False),
-    dbc.Row([
-        dbc.Col(
-            dcc.Graph(id='season-summary'),
-            width={"size": 12} # "offset": -1
-        ),
+
+tab2_layout =  [
+        dbc.Row([
             dbc.Col(
-                # summary table
-                # graph
-                dcc.Graph(id='season-graph'),
-                width={"size": 12}
+                html.H1("Soccer Results Viewer"),
+                width={"size": 11,  "offset": 0} # lg=3, md=6, xs=12
+            ),
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardImg(
+                        id="logo-id-tab2",
+                        style={
+                                'height': '100px',
+                                'width': '80px',
+                                # 'float': 'right',
+                                'position': 'relative',
+                                'padding-top': 1,
+                                'padding-right': 1,
+                                # "background": "black",
+                                # "border-color": "#FF0000",
+                                # "border-width": "5%",
+                                "border":"1px double black"
+                        }
+                    )
+                ),
+                width={"size": 1, "offset": 0, "padding-right": "5%"}
             )
-    ], justify="center"),
-    # dbc.Row([
-    #     dbc.Col(
-    #         dcc.Graph(id='season-graph'),
-    #         # width={"offset": -1}
-    #     )
-    # ], justify="center"),
-    # dbc.Row([
-    #     dbc.Col(
-    #         # summary table
-    #         dcc.Graph(id='season-summary'),
-    #     ),
-    #     dbc.Col(
-    #         # summary table
-    #         # graph
-    #         dcc.Graph(id='season-graph'),
-    #     )
-    # ]),
-])
+        ]),
+        html.Br(),
+        #
+        dbc.Row([
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
+                    [
+                        "Select Division",
+                        dcc.Dropdown(
+                            id='division-selector-tab2',
+                            options=onLoad_division_options(),
+                            value=initial_division_value,
+                            style={
+                                # 'height': '5px',
+                                'width': '100%',
+                                # 'font-size': "50%",
+                                # 'min-height': '3px',
+                            },
+                        )
+                    ]
+                ),
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+            ),
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
+                    [
+                        "Select Season",
+                        dcc.Dropdown(
+                            id='season-selector-tab2',
+                            value=initial_season_value,
+                            style={
+                            #     'height': '2px',
+                                'width': '100%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
+                        )
+                    ]
+                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
+            ),
+            dbc.Col(
+                # Select Division Dropdown
+                html.Label(
+                    [
+                        "Select Team to view details",
+                        dcc.Dropdown(
+                            id='team-selector-tab2',
+                            value=initial_team,
+                            style={
+                            #     'height': '2px',
+                                'width': '100%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
+                        ),
+
+                    ]
+                ),
+                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+                #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
+            ),
+        ], justify="left", no_gutters = False),
+        dbc.Row([
+            dbc.Col(
+                dcc.Graph(id='season-summary'),
+                width={"size": 12} # "offset": -1
+            ),
+                dbc.Col(
+                    # summary table
+                    # graph
+                    dcc.Graph(id='season-graph'),
+                    width={"size": 12}
+                )
+        ]),
+]
 
 
+# print("tab1_layout: {}".format(tab1_layout))
+# print("tab2_layout: {}".format(tab2_layout))
 
 app.layout = html.Div([
-    dcc.Tabs(
-        id="tabs-with-classes",
-        value='tab-2',
-        parent_className='custom-tabs',
-        className='custom-tabs-container',
-        children=[
-            dcc.Tab(
-                label='Tab one',
-                value='tab-1',
-                className='custom-tab',
-                selected_className='custom-tab--selected'
-            ),
-            dcc.Tab(
-                label='Tab two',
-                value='tab-2',
-                className='custom-tab',
-                selected_className='custom-tab--selected'
-            ),
-        ]),
-    html.Div(id='tabs-content-classes')
-])
+    dcc.Store(id='division-selector-cache', storage_type='session'),
+    dcc.Store(id='season-selector-cache', storage_type='session'),
+    # dcc.Store(id='division-selector-cache', data='initial value'),
+    # dcc.Store(id='store_1', storage_type='session'),
+    html.Div([
+        dcc.Tabs(
+            id='tabs',
+            children=[
+                dcc.Tab(
+                    label='Leagues Reults',
+                    value=1,
+                    children=tab1_layout
+                    # [
+                    #     dcc.Dropdown(
+                    #         id='tab-1-dropdown',
+                    #     ),
+                    # ]
+                ),
+                dcc.Tab(
+                    label='Detail for Selectionned Team',
+                    value=2,
+                    children=tab2_layout
+                    # [
+                    #     dcc.Dropdown(
+                    #         id='tab-1-dropdown',
+                    #     ),
+                    # ]
+                ),
+            ]),
+    ]),
+    html.Div(id='tab-output')
+], style={ "padding-left": "5%", "padding-right": "5%"})
 
+# @app.callback(
+# 	Output('tab-output', 'children'),
+# 	[Input('tabs', 'value')])
+# def show_content(value):
+# 	if value == 1:
+# 		return tab1_layout
+# 	elif value == 2:
+# 		return tab2_layout
+# 	else:
+# 		html.Div()
 
-
-
-@app.callback(Output('tabs-content-classes', 'children'),
-              [Input('tabs-with-classes', 'value')])
-def render_content(tab):
-    if tab == 'tab-1':
-        return content_tab1
-    elif tab == 'tab-2':
-        return content_tab2
-
-
-
-# app.layout = html.Div(
-#     [
-#         dcc.Tabs([
-#                 dcc.Tab(label='Tab one', children=[
-#                     content_tab1
-#                 ]
-#             ),
-#                 dcc.Tab(label='Tab two', children=[
-#                     content_tab2
-#                 ]
-#             )
-#         ])
-#     ], style={ "padding-left": "5%", "padding-right": "5%"} # "background-color":"blue"
-# )
 
 
 #############################################
 # Interaction Between Components / Controller
 #############################################
+
+# callback portion for synchronizing dropdown across tabs.
+@app.callback(
+    Output('division-selector-cache', 'data'),
+    [Input('division-selector-tab1', 'value'),
+     Input('division-selector-tab2', 'value'),
+     # Input('season-selector-tab1', 'value'),
+     #  Input('season-selector-tab2', 'value')
+      ],
+     [State('tabs', 'value')]
+)
+def store_dropdown_cache(
+    tab_1_division_selector,
+    tab_2_division_selector,
+    # tab_1_season_selector,
+    # tab_2_season_selector,
+    tab
+):
+    print("tab_1_division_selector {}".format(tab_1_division_selector))
+    print("tab_2_division_selector {}".format(tab_2_division_selector))
+    if tab == 1:
+        print("tab_1_division_selector {}".format(tab_1_division_selector))
+        return tab_1_division_selector #[tab_1_division_selector, tab_1_season_selector]
+    elif tab == 2:
+        print("tab_2_division_selector {}".format(tab_2_division_selector))
+        return tab_2_division_selector #[tab_2_division_selector, tab_2_season_selector]
+
+
+# Note that using drodowns-cache as an input to change the
+# dropdown value breaks the layout. I feel this has something
+# to do with circular reference, but using the state w/tab
+# value as the input callback trigger works!
+@app.callback(
+    Output('division-selector-tab1', 'value'),
+    [Input('tabs', 'value')],
+    [State('division-selector-cache', 'data')]
+)
+def synchronize_dropdowns(_, cache):
+    print("cache1: {}".format(cache))
+    print("cache1_: {}".format(_))
+    return cache
+
+@app.callback(
+    Output('division-selector-tab2', 'value'),
+    # Output('season-selector-tab1', 'value'),
+    [Input('tabs', 'value')],
+    [State('division-selector-cache', 'data')]
+)
+def synchronize_dropdowns(_, cache):
+    print("cache2: {}".format(cache))
+    print("cache2_: {}".format(_))
+    return cache
+
+
 image_directory = 'assets/'
 list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_directory))]
 print("list_of_images: {}".format(list_of_images))
 
 @app.callback(
-    dash.dependencies.Output('logo-id', 'src'),
-    [dash.dependencies.Input('division-selector', 'value')]
+    dash.dependencies.Output('logo-id-tab1', 'src'),
+    [dash.dependencies.Input('division-selector-tab1', 'value')]
 )
 def update_image_src(division):
     image_name = '{}.png'.format(division)
@@ -537,11 +572,30 @@ def update_image_src(division):
 
 
 
+
+@app.callback(
+    dash.dependencies.Output('logo-id-tab2', 'src'),
+    [dash.dependencies.Input('division-selector-tab2', 'value')]
+)
+def update_image_src(division):
+    image_name = '{}.png'.format(division)
+    print("image_name: {}".format(image_name))
+
+    # if image_name not in list_of_images:
+    #     raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
+    image_filename = image_directory + str(division) + ".png"
+    print("image_name: {}".format(image_name))
+    encoded_image =  base64.b64encode(open(image_filename, 'rb').read())
+    return('data:image/png;base64,{}'.format(encoded_image.decode()))
+
+
+
+
 # Load Seasons in Dropdown
 @app.callback(
-    Output(component_id='season-selector', component_property='options'),
+    Output(component_id='season-selector-tab1', component_property='options'),
     [
-        Input(component_id='division-selector', component_property='value')
+        Input(component_id='division-selector-tab1', component_property='value')
     ]
 )
 def populate_season_selector(division):
@@ -553,26 +607,143 @@ def populate_season_selector(division):
     ]
 
 
+# Load Seasons in Dropdown
+@app.callback(
+    Output(component_id='season-selector-tab2', component_property='options'),
+    [
+        Input(component_id='division-selector-tab2', component_property='value')
+    ]
+)
+def populate_season_selector(division):
+    seasons = get_seasons(division)
+    # print("seasons: {}".format(seasons))
+    return [
+        {'label': season, 'value': season}
+        for season in seasons
+    ]
+
+
+# # season-selector-tab tab1
+# @app.callback(
+#     Output(component_id='season-selector-tab1', component_property='value'),
+#     [Input(component_id='season-selector-tab1', component_property='options')]
+# )
+# def set_season_selector(available_options):
+#     print("season-selector-tab1 options: {}".format(available_options))
+#     return available_options[0]['value']
+#
+#
+#
+# @app.callback(
+#     Output(component_id='season-selector-tab2', component_property='value'),
+#     [Input(component_id='season-selector-tab2', component_property='options')]
+# )
+# def set_season_selector(available_options):
+#     print("season-selector-tab2 options: {}".format(available_options))
+#     return available_options[0]['value']
+
+# callback portion for synchronizing dropdown across tabs.
+@app.callback(
+    Output('season-selector-cache', 'data'),
+    [Input('season-selector-tab1', 'value'),
+     Input('season-selector-tab2', 'value'),
+     # Input('season-selector-tab1', 'value'),
+     #  Input('season-selector-tab2', 'value')
+      ],
+     [State('tabs', 'value')]
+)
+def store_dropdown_cache(
+    tab_1_season_selector,
+    tab_2_season_selector,
+    # tab_1_season_selector,
+    # tab_2_season_selector,
+    tab
+):
+    if tab == 1:
+        return tab_1_season_selector #[tab_1_division_selector, tab_1_season_selector]
+    elif tab == 2:
+        return tab_2_season_selector #[tab_2_division_selector, tab_2_season_selector]
+
+
+# Note that using drodowns-cache as an input to change the
+# dropdown value breaks the layout. I feel this has something
+# to do with circular reference, but using the state w/tab
+# value as the input callback trigger works!
+
+@app.callback(Output('season-selector-tab1', 'value'),
+               # Output('season-selector-tab1', 'value'),
+              [Input('tabs', 'value')],
+              [State('season-selector-cache', 'data')]
+              )
+def synchronize_dropdowns(_, cache):
+    return cache
 
 @app.callback(
-    Output(component_id='season-selector', component_property='value'),
-    [Input(component_id='season-selector', component_property='options')]
+    Output('season-selector-tab2', 'value'),
+    # Output('season-selector-tab1', 'value'),
+    [Input('tabs', 'value')],
+    [State('season-selector-cache', 'data')]
 )
-def set_season_selector(available_options):
-    return available_options[0]['value']
+def synchronize_dropdowns(_, cache):
+    return cache
 
+# # callback portion for synchronizing dropdown across tabs.
+# @app.callback(
+#     Output('season-selector-cache', 'data'),
+#     [Input('season-selector-tab1', 'value'),
+#      Input('season-selector-tab2', 'value')
+#      # Input('season-selector-tab1', 'value'),
+#      #  Input('season-selector-tab2', 'value')
+#       ],
+#      [State('tabs', 'value')]
+# )
+# def store_dropdown_cache(
+#     tab_1_season_selector,
+#     tab_2_season_selector,
+#     # tab_1_season_selector,
+#     # tab_2_season_selector,
+#     tab
+# ):
+#     if tab == 1:
+#         return tab_1_season_selector #[tab_1_division_selector, tab_1_season_selector]
+#     elif tab == 2:
+#         return tab_2_season_selector #[tab_2_division_selector, tab_2_season_selector]
+
+
+# # Note that using drodowns-cache as an input to change the
+# # dropdown value breaks the layout. I feel this has something
+# # to do with circular reference, but using the state w/tab
+# # value as the input callback trigger works!
+#
+# @app.callback(Output('season-selector-tab1', 'value'),
+#               [Input('tabs', 'value')],
+#               [State('season-selector-cache', 'data')]
+# )
+# def synchronize_dropdowns(_, cache):
+#     return cache
+#
+# @app.callback(
+#     Output('season-selector-tab2', 'value'),
+#     [Input('tabs', 'value')],
+#     [State('season-selector-cache', 'data')]
+# )
+# def synchronize_dropdowns(_, cache):
+#     return cache
 
 
 # Load Teams into dropdown
 @app.callback(
-    Output(component_id='team-selector', component_property='options'),
+    Output(component_id='team-selector-tab2', component_property='options'),
     [
-        Input(component_id='division-selector', component_property='value'),
-        Input(component_id='season-selector', component_property='value')
+        Input(component_id='division-selector-tab2', component_property='value'),
+        Input(component_id='season-selector-tab2', component_property='value')
     ]
 )
 def populate_team_selector(division, season):
+    print("division: ".format(division))
+    print("season: ".format(season))
     teams = get_teams(division, season)
+    print("teams: {}".format(teams))
     return [
         {'label': team, 'value': team}
         for team in teams
@@ -580,21 +751,23 @@ def populate_team_selector(division, season):
 
 # update team
 @app.callback(
-    Output(component_id='team-selector', component_property='value'),
+    Output(component_id='team-selector-tab2', component_property='value'),
     [
-        Input(component_id='team-selector', component_property='options'),
+        Input(component_id='team-selector-tab2', component_property='options'),
     ]
 )
 def set_season_selector(available_options):
+    print("available_options: {}".format(available_options))
     return available_options[0]['value']
+
 
 
 # Load Match results
 @app.callback(
     Output(component_id='match-results', component_property='children'),
     [
-        Input(component_id='division-selector', component_property='value'),
-        Input(component_id='season-selector', component_property='value'),
+        Input(component_id='division-selector-tab1', component_property='value'),
+        Input(component_id='season-selector-tab1', component_property='value'),
         # Input(component_id='team-selector', component_property='value')
     ]
 )
@@ -607,9 +780,9 @@ def load_match_results(division, season):
 @app.callback(
     Output(component_id='season-summary', component_property='figure'),
     [
-        Input(component_id='division-selector', component_property='value'),
-        Input(component_id='season-selector', component_property='value'),
-        Input(component_id='team-selector', component_property='value')
+        Input(component_id='division-selector-tab2', component_property='value'),
+        Input(component_id='season-selector-tab2', component_property='value'),
+        Input(component_id='team-selector-tab2', component_property='value')
     ]
 )
 def load_season_summary(division, season, team):
@@ -630,9 +803,9 @@ def load_season_summary(division, season, team):
 @app.callback(
     Output(component_id='season-graph', component_property='figure'),
     [
-        Input(component_id='division-selector', component_property='value'),
-        Input(component_id='season-selector', component_property='value'),
-        Input(component_id='team-selector', component_property='value')
+        Input(component_id='division-selector-tab2', component_property='value'),
+        Input(component_id='season-selector-tab2', component_property='value'),
+        Input(component_id='team-selector-tab2', component_property='value')
     ]
 )
 def load_season_points_graph(division, season, team):
@@ -649,8 +822,8 @@ def load_season_points_graph(division, season, team):
 @app.callback(
     Output(component_id='bar-chart-graph', component_property='figure'),
     [
-        Input(component_id='division-selector', component_property='value'),
-        Input(component_id='season-selector', component_property='value')
+        Input(component_id='division-selector-tab1', component_property='value'),
+        Input(component_id='season-selector-tab1', component_property='value')
     ]
 )
 def load_season_division_points_graph(division, season):
@@ -661,7 +834,6 @@ def load_season_division_points_graph(division, season):
         figure = draw_barchart_season_division_graph(results, division, season)
 
     return figure
-
 
 
 # start Flask server
