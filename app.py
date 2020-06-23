@@ -288,12 +288,12 @@ tab1_layout = [
                             id='division-selector-tab1',
                             value=initial_division_value,
                             options=onLoad_division_options(),
-                        #     style={
-                        #         # 'height': '5px',
-                        #         'width': '150%',
-                        #         # 'font-size': "50%",
-                        #         # 'min-height': '3px',
-                        #     },
+                            style={
+                                # 'height': '5px',
+                                'width': '150%',
+                                # 'font-size': "50%",
+                                # 'min-height': '3px',
+                            },
                         )
                     ]
                 ),
@@ -307,12 +307,12 @@ tab1_layout = [
                         dcc.Dropdown(
                             id='season-selector-tab1',
                             value=initial_season_value,
-                            # style={
-                            # #     'height': '2px',
-                            #     'width': '150%',
-                            # #     'font-size': "50%",
-                            # #     'min-height': '1px',
-                            # },
+                            style={
+                            #     'height': '2px',
+                                'width': '150%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
                         )
                     ]
                 ),
@@ -378,12 +378,12 @@ tab2_layout =  [
                             id='division-selector-tab2',
                             options=onLoad_division_options(),
                             value=initial_division_value,
-                            # style={
-                            #     # 'height': '5px',
-                            #     'width': '150%',
-                            #     # 'font-size': "50%",
-                            #     # 'min-height': '3px',
-                            # },
+                            style={
+                                # 'height': '5px',
+                                'width': '150%',
+                                # 'font-size': "50%",
+                                # 'min-height': '3px',
+                            },
                         )
                     ]
                 ),
@@ -397,12 +397,12 @@ tab2_layout =  [
                         dcc.Dropdown(
                             id='season-selector-tab2',
                             value=initial_season_value,
-                            # style={
-                            # #     'height': '2px',
-                            #     'width': '150%',
-                            # #     'font-size': "50%",
-                            # #     'min-height': '1px',
-                            # },
+                            style={
+                            #     'height': '2px',
+                                'width': '150%',
+                            #     'font-size': "50%",
+                            #     'min-height': '1px',
+                            },
                         )
                     ]
                 )
