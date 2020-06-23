@@ -454,7 +454,7 @@ app.layout = html.Div([
             id='tabs',
             children=[
                 dcc.Tab(
-                    label='Leagues Reults',
+                    label='Leagues Results',
                     value=1,
                     children=tab1_layout
                 ),
