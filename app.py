@@ -446,9 +446,6 @@ tab2_layout =  [
 ]
 
 
-# print("tab1_layout: {}".format(tab1_layout))
-# print("tab2_layout: {}".format(tab2_layout))
-
 app.layout = html.Div([
     dcc.Store(id='division-selector-cache', storage_type='session', data=initial_division_value),
     dcc.Store(id='season-selector-cache', storage_type='session', data=initial_season_value),
@@ -460,21 +457,11 @@ app.layout = html.Div([
                     label='Leagues Reults',
                     value=1,
                     children=tab1_layout
-                    # [
-                    #     dcc.Dropdown(
-                    #         id='tab-1-dropdown',
-                    #     ),
-                    # ]
                 ),
                 dcc.Tab(
                     label='Detail for Selectionned Team',
                     value=2,
                     children=tab2_layout
-                    # [
-                    #     dcc.Dropdown(
-                    #         id='tab-1-dropdown',
-                    #     ),
-                    # ]
                 ),
             ]),
     ]),
@@ -546,8 +533,6 @@ print("list_of_images: {}".format(list_of_images))
 def update_image_src(division):
     image_name = '{}.png'.format(division)
     print("image_name: {}".format(image_name))
-    if image_name == "None.png":
-        raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
 
     if image_name not in list_of_images:
         raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
@@ -708,7 +693,7 @@ def set_season_selector(available_options):
 )
 def load_match_results(division, season):
     results = get_match_results_division_season(division, season)
-    return generate_table(results, max_rows=10)
+    return generate_table(results, max_rows=results.shape[0])
 
 
 # Update Season Summary Table
