@@ -290,7 +290,7 @@ tab1_layout = [
                             options=onLoad_division_options(),
                             style={
                                 # 'height': '5px',
-                                'width': '100%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
@@ -309,7 +309,7 @@ tab1_layout = [
                             value=initial_season_value,
                             style={
                             #     'height': '2px',
-                                'width': '100%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
@@ -379,7 +379,7 @@ tab2_layout =  [
                             value=initial_division_value,
                             style={
                                 # 'height': '5px',
-                                'width': '100%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
@@ -417,7 +417,7 @@ tab2_layout =  [
                             value=initial_team,
                             style={
                             #     'height': '2px',
-                                'width': '100%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
