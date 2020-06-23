@@ -288,16 +288,16 @@ tab1_layout = [
                             id='division-selector-tab1',
                             value=initial_division_value,
                             options=onLoad_division_options(),
-                            style={
-                                # 'height': '5px',
-                                'width': '100%',
-                                # 'font-size': "50%",
-                                # 'min-height': '3px',
-                            },
+                        #     style={
+                        #         # 'height': '5px',
+                        #         'width': '150%',
+                        #         # 'font-size': "50%",
+                        #         # 'min-height': '3px',
+                        #     },
                         )
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -307,15 +307,16 @@ tab1_layout = [
                         dcc.Dropdown(
                             id='season-selector-tab1',
                             value=initial_season_value,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '150%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
                         )
                     ]
-                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                ),
+                # width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             )
             ], justify="left", no_gutters = False), #j,
@@ -326,13 +327,13 @@ tab1_layout = [
                 dbc.Col(
                     # Select Division Dropdown
                     html.Table(id='match-results'),
-                    width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
+                    # width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
                 ),
                 dbc.Col(
                     # Select Division Dropdown
                     # barchart by division
                     dcc.Graph(id='bar-chart-graph'),
-                    width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
+                    # width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
                 )
             ])
 ]
@@ -377,16 +378,16 @@ tab2_layout =  [
                             id='division-selector-tab2',
                             options=onLoad_division_options(),
                             value=initial_division_value,
-                            style={
-                                # 'height': '5px',
-                                'width': '100%',
-                                # 'font-size': "50%",
-                                # 'min-height': '3px',
-                            },
+                            # style={
+                            #     # 'height': '5px',
+                            #     'width': '150%',
+                            #     # 'font-size': "50%",
+                            #     # 'min-height': '3px',
+                            # },
                         )
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -396,15 +397,16 @@ tab2_layout =  [
                         dcc.Dropdown(
                             id='season-selector-tab2',
                             value=initial_season_value,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '150%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
                         )
                     ]
-                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                )
+                # ,  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
             dbc.Col(
@@ -415,31 +417,31 @@ tab2_layout =  [
                         dcc.Dropdown(
                             id='team-selector-tab2',
                             value=initial_team,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
-                        ),
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '150%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
+                        )
 
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
             ),
         ], justify="left", no_gutters = False),
         dbc.Row([
             dbc.Col(
                 dcc.Graph(id='season-summary'),
-                width={"size": 12} # "offset": -1
+                # width={"size": 12} # "offset": -1
             ),
-                dbc.Col(
-                    # summary table
-                    # graph
-                    dcc.Graph(id='season-graph'),
-                    width={"size": 12}
-                )
+            dbc.Col(
+                # summary table
+                # graph
+                dcc.Graph(id='season-graph'),
+                # width={"size": 12}
+            )
         ]),
 ]
 
