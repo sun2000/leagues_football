@@ -290,14 +290,14 @@ tab1_layout = [
                             options=onLoad_division_options(),
                             style={
                                 # 'height': '5px',
-                                'width': '100%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
                         )
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -309,13 +309,14 @@ tab1_layout = [
                             value=initial_season_value,
                             style={
                             #     'height': '2px',
-                                'width': '100%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
                         )
                     ]
-                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                ),
+                # width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             )
             ], justify="left", no_gutters = False), #j,
@@ -326,13 +327,13 @@ tab1_layout = [
                 dbc.Col(
                     # Select Division Dropdown
                     html.Table(id='match-results'),
-                    width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
+                    # width={"size": 5, "lg": 4, "md": 8, "sm": 10,  "xs": 12, "offset": 1}
                 ),
                 dbc.Col(
                     # Select Division Dropdown
                     # barchart by division
                     dcc.Graph(id='bar-chart-graph'),
-                    width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
+                    # width={"size": 5,  "lg": 4, "md": 8, "sm": 10,  "xs": 12,  "offset": 0}
                 )
             ])
 ]
@@ -379,14 +380,14 @@ tab2_layout =  [
                             value=initial_division_value,
                             style={
                                 # 'height': '5px',
-                                'width': '100%',
+                                'width': '150%',
                                 # 'font-size': "50%",
                                 # 'min-height': '3px',
                             },
                         )
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12} ##width="auto" , "offset": 1
             ),
             dbc.Col(
                 # Select Division Dropdown
@@ -398,13 +399,14 @@ tab2_layout =  [
                             value=initial_season_value,
                             style={
                             #     'height': '2px',
-                                'width': '100%',
+                                'width': '150%',
                             #     'font-size': "50%",
                             #     'min-height': '1px',
                             },
                         )
                     ]
-                ),  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
+                )
+                # ,  width={"size": 4} #, "lg": 2, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #{"lg": 4, "md": 8, "sm": 10, "xs": 12 } # "size": 4
             ),
             dbc.Col(
@@ -415,37 +417,34 @@ tab2_layout =  [
                         dcc.Dropdown(
                             id='team-selector-tab2',
                             value=initial_team,
-                            style={
-                            #     'height': '2px',
-                                'width': '100%',
-                            #     'font-size': "50%",
-                            #     'min-height': '1px',
-                            },
-                        ),
+                            # style={
+                            # #     'height': '2px',
+                            #     'width': '150%',
+                            # #     'font-size': "50%",
+                            # #     'min-height': '1px',
+                            # },
+                        )
 
                     ]
                 ),
-                width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
+                # width={"size": 4} #, "lg": 4, "md": 8, "sm": 10,  "xs": 12}
                 #width="auto" #width={"lg": 4, "md": 8, "sm": 10, "xs": 12, "offset": 1}
             ),
         ], justify="left", no_gutters = False),
         dbc.Row([
             dbc.Col(
                 dcc.Graph(id='season-summary'),
-                width={"size": 12} # "offset": -1
+                # width={"size": 12} # "offset": -1
             ),
-                dbc.Col(
-                    # summary table
-                    # graph
-                    dcc.Graph(id='season-graph'),
-                    width={"size": 12}
-                )
+            dbc.Col(
+                # summary table
+                # graph
+                dcc.Graph(id='season-graph'),
+                # width={"size": 12}
+            )
         ]),
 ]
 
-
-# print("tab1_layout: {}".format(tab1_layout))
-# print("tab2_layout: {}".format(tab2_layout))
 
 app.layout = html.Div([
     dcc.Store(id='division-selector-cache', storage_type='session', data=initial_division_value),
@@ -455,24 +454,14 @@ app.layout = html.Div([
             id='tabs',
             children=[
                 dcc.Tab(
-                    label='Leagues Reults',
+                    label='Leagues Results',
                     value=1,
                     children=tab1_layout
-                    # [
-                    #     dcc.Dropdown(
-                    #         id='tab-1-dropdown',
-                    #     ),
-                    # ]
                 ),
                 dcc.Tab(
                     label='Detail for Selectionned Team',
                     value=2,
                     children=tab2_layout
-                    # [
-                    #     dcc.Dropdown(
-                    #         id='tab-1-dropdown',
-                    #     ),
-                    # ]
                 ),
             ]),
     ]),
@@ -544,8 +533,6 @@ print("list_of_images: {}".format(list_of_images))
 def update_image_src(division):
     image_name = '{}.png'.format(division)
     print("image_name: {}".format(image_name))
-    if image_name == "None.png":
-        raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
 
     if image_name not in list_of_images:
         raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
@@ -706,7 +693,7 @@ def set_season_selector(available_options):
 )
 def load_match_results(division, season):
     results = get_match_results_division_season(division, season)
-    return generate_table(results, max_rows=10)
+    return generate_table(results, max_rows=results.shape[0])
 
 
 # Update Season Summary Table
