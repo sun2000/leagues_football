@@ -286,8 +286,8 @@ tab1_layout = [
                         "Select Division",
                         dcc.Dropdown(
                             id='division-selector-tab1',
-                            options=onLoad_division_options(),
                             value=initial_division_value,
+                            options=onLoad_division_options(),
                             style={
                                 # 'height': '5px',
                                 'width': '100%',
@@ -448,10 +448,8 @@ tab2_layout =  [
 # print("tab2_layout: {}".format(tab2_layout))
 
 app.layout = html.Div([
-    dcc.Store(id='division-selector-cache', storage_type='session'),
-    dcc.Store(id='season-selector-cache', storage_type='session'),
-    # dcc.Store(id='division-selector-cache', data='initial value'),
-    # dcc.Store(id='store_1', storage_type='session'),
+    dcc.Store(id='division-selector-cache', storage_type='session', data=initial_division_value),
+    dcc.Store(id='season-selector-cache', storage_type='session', data=initial_season_value),
     html.Div([
         dcc.Tabs(
             id='tabs',
@@ -481,17 +479,6 @@ app.layout = html.Div([
     html.Div(id='tab-output')
 ], style={ "padding-left": "5%", "padding-right": "5%"})
 
-# @app.callback(
-# 	Output('tab-output', 'children'),
-# 	[Input('tabs', 'value')])
-# def show_content(value):
-# 	if value == 1:
-# 		return tab1_layout
-# 	elif value == 2:
-# 		return tab2_layout
-# 	else:
-# 		html.Div()
-
 
 
 #############################################
@@ -502,17 +489,12 @@ app.layout = html.Div([
 @app.callback(
     Output('division-selector-cache', 'data'),
     [Input('division-selector-tab1', 'value'),
-     Input('division-selector-tab2', 'value'),
-     # Input('season-selector-tab1', 'value'),
-     #  Input('season-selector-tab2', 'value')
-      ],
+     Input('division-selector-tab2', 'value')],
      [State('tabs', 'value')]
 )
 def store_dropdown_cache(
     tab_1_division_selector,
     tab_2_division_selector,
-    # tab_1_season_selector,
-    # tab_2_season_selector,
     tab
 ):
     print("tab_1_division_selector {}".format(tab_1_division_selector))
@@ -541,7 +523,6 @@ def synchronize_dropdowns(_, cache):
 
 @app.callback(
     Output('division-selector-tab2', 'value'),
-    # Output('season-selector-tab1', 'value'),
     [Input('tabs', 'value')],
     [State('division-selector-cache', 'data')]
 )
@@ -555,16 +536,19 @@ image_directory = 'assets/'
 list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_directory))]
 print("list_of_images: {}".format(list_of_images))
 
+
 @app.callback(
-    dash.dependencies.Output('logo-id-tab1', 'src'),
-    [dash.dependencies.Input('division-selector-tab1', 'value')]
+    Output('logo-id-tab1', 'src'),
+    [Input('division-selector-tab1', 'value')]
 )
 def update_image_src(division):
     image_name = '{}.png'.format(division)
     print("image_name: {}".format(image_name))
+    if image_name == "None.png":
+        raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
 
-    # if image_name not in list_of_images:
-    #     raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
+    if image_name not in list_of_images:
+        raise Exception('"{}" is excluded from the allowed static images'.format(image_directory))
     image_filename = image_directory + str(division) + ".png"
     print("image_name: {}".format(image_name))
     encoded_image =  base64.b64encode(open(image_filename, 'rb').read())
@@ -572,10 +556,9 @@ def update_image_src(division):
 
 
 
-
 @app.callback(
-    dash.dependencies.Output('logo-id-tab2', 'src'),
-    [dash.dependencies.Input('division-selector-tab2', 'value')]
+    Output('logo-id-tab2', 'src'),
+    [Input('division-selector-tab2', 'value')]
 )
 def update_image_src(division):
     image_name = '{}.png'.format(division)
@@ -646,17 +629,12 @@ def populate_season_selector(division):
 @app.callback(
     Output('season-selector-cache', 'data'),
     [Input('season-selector-tab1', 'value'),
-     Input('season-selector-tab2', 'value'),
-     # Input('season-selector-tab1', 'value'),
-     #  Input('season-selector-tab2', 'value')
-      ],
+     Input('season-selector-tab2', 'value')],
      [State('tabs', 'value')]
 )
 def store_dropdown_cache(
     tab_1_season_selector,
     tab_2_season_selector,
-    # tab_1_season_selector,
-    # tab_2_season_selector,
     tab
 ):
     if tab == 1:
@@ -670,65 +648,21 @@ def store_dropdown_cache(
 # to do with circular reference, but using the state w/tab
 # value as the input callback trigger works!
 
-@app.callback(Output('season-selector-tab1', 'value'),
-               # Output('season-selector-tab1', 'value'),
-              [Input('tabs', 'value')],
-              [State('season-selector-cache', 'data')]
-              )
-def synchronize_dropdowns(_, cache):
-    return cache
-
 @app.callback(
-    Output('season-selector-tab2', 'value'),
-    # Output('season-selector-tab1', 'value'),
+    Output('season-selector-tab1', 'value'),
     [Input('tabs', 'value')],
     [State('season-selector-cache', 'data')]
 )
 def synchronize_dropdowns(_, cache):
     return cache
 
-# # callback portion for synchronizing dropdown across tabs.
-# @app.callback(
-#     Output('season-selector-cache', 'data'),
-#     [Input('season-selector-tab1', 'value'),
-#      Input('season-selector-tab2', 'value')
-#      # Input('season-selector-tab1', 'value'),
-#      #  Input('season-selector-tab2', 'value')
-#       ],
-#      [State('tabs', 'value')]
-# )
-# def store_dropdown_cache(
-#     tab_1_season_selector,
-#     tab_2_season_selector,
-#     # tab_1_season_selector,
-#     # tab_2_season_selector,
-#     tab
-# ):
-#     if tab == 1:
-#         return tab_1_season_selector #[tab_1_division_selector, tab_1_season_selector]
-#     elif tab == 2:
-#         return tab_2_season_selector #[tab_2_division_selector, tab_2_season_selector]
-
-
-# # Note that using drodowns-cache as an input to change the
-# # dropdown value breaks the layout. I feel this has something
-# # to do with circular reference, but using the state w/tab
-# # value as the input callback trigger works!
-#
-# @app.callback(Output('season-selector-tab1', 'value'),
-#               [Input('tabs', 'value')],
-#               [State('season-selector-cache', 'data')]
-# )
-# def synchronize_dropdowns(_, cache):
-#     return cache
-#
-# @app.callback(
-#     Output('season-selector-tab2', 'value'),
-#     [Input('tabs', 'value')],
-#     [State('season-selector-cache', 'data')]
-# )
-# def synchronize_dropdowns(_, cache):
-#     return cache
+@app.callback(
+    Output('season-selector-tab2', 'value'),
+    [Input('tabs', 'value')],
+    [State('season-selector-cache', 'data')]
+)
+def synchronize_dropdowns(_, cache):
+    return cache
 
 
 # Load Teams into dropdown
@@ -759,7 +693,6 @@ def populate_team_selector(division, season):
 def set_season_selector(available_options):
     print("available_options: {}".format(available_options))
     return available_options[0]['value']
-
 
 
 # Load Match results
